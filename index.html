@@ -435,16 +435,18 @@
     if (direction === "UP") head.y -= box;
     if (direction === "DOWN") head.y += box;
 
-    // Game Over
-    if (
-      head.x < 0 || head.x >= canvas.width ||
-      head.y < 0 || head.y >= canvas.height ||
-      snake.some((seg, idx) => idx !== 0 && seg.x === head.x && seg.y === head.y)
-    ) {
-      clearInterval(game);
-      alert("💥 Game Over! Du hast " + score + " Punkte erreicht.");
-      location.reload();
-    }
+    // Wrap-Around statt Game Over bei Wand
+if (head.x < 0) head.x = canvas.width - box;
+if (head.x >= canvas.width) head.x = 0;
+if (head.y < 0) head.y = canvas.height - box;
+if (head.y >= canvas.height) head.y = 0;
+
+// Game Over nur bei Selbstkollision
+if (snake.some((seg, idx) => idx !== 0 && seg.x === head.x && seg.y === head.y)) {
+  clearInterval(game);
+  alert("💥 Game Over! Du hast " + score + " Punkte erreicht.");
+  location.reload();
+}
 
     snake.unshift(head);
 
