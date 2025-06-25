@@ -10,128 +10,192 @@
   <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
 
   <style>
-    html {
-      scroll-behavior: smooth;
-    }
-    body {
-      margin: 0;
-      background: radial-gradient(circle at top, #1e1f3a 0%, #0a0d1a 100%);
-      color: #eaf6ff;
-      font-family: 'Quicksand', sans-serif;
-      padding-top: 80px;
-      overflow-x: hidden;
-    }
-    header {
-      position: relative;
-      text-align: center;
-      color: #00e6ff;
-      font-family: 'Press Start 2P', cursive;
-      text-shadow: 2px 2px #003344;
-    }
-    header img {
-      width: 100%;
-      max-height: 300px;
-      object-fit: cover;
-      filter: brightness(0.7);
-    }
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    margin: 0;
+    background: radial-gradient(circle at top, #1e1f3a 0%, #0a0d1a 100%);
+    color: #eaf6ff;
+    font-family: 'Quicksand', sans-serif;
+    padding-top: 80px;
+    overflow-x: hidden;
+  }
+
+  header {
+    position: relative;
+    text-align: center;
+    color: #00e6ff;
+    font-family: 'Press Start 2P', cursive;
+    text-shadow: 2px 2px #003344;
+    padding: 0 20px;
+  }
+
+  header img {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+    filter: brightness(0.7);
+  }
+
+  nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #0ff;
+    text-align: center;
+    padding: 20px 0;
+    box-shadow: 0 4px 12px rgba(0, 255, 255, 0.3);
+    z-index: 999;
+    transition: background-color 0.3s ease;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  nav a {
+    color: #001133;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: color 0.3s, text-shadow 0.3s;
+    position: relative;
+    display: inline-block;
+    padding: 5px;
+  }
+
+  nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    background: #00e6ff;
+    left: 0;
+    bottom: -6px;
+    transition: width 0.3s;
+  }
+
+  nav a:hover, nav a.active {
+    color: #fff;
+    text-shadow: 0 0 8px #00e6ff;
+  }
+
+  nav a:hover::after, nav a.active::after {
+    width: 100%;
+  }
+
+  section {
+    padding: 80px 20px;
+    border-bottom: 2px dashed #00e6ff;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+
+  h1, h2 {
+    font-family: 'Press Start 2P', cursive;
+    color: #00e6ff;
+    text-shadow: 2px 2px #003344;
+    margin-bottom: 30px;
+    font-size: 22px;
+    text-align: center;
+  }
+
+  p {
+    font-size: 16px;
+    line-height: 1.7;
+    max-width: 800px;
+    margin: 0 auto 20px auto;
+  }
+
+  .game-image {
+    display: block;
+    max-width: 100%;
+    margin: 20px auto;
+    border: 3px solid #00e6ff;
+    border-radius: 12px;
+    box-shadow: 0 0 15px #00e6ff88;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+  }
+
+  .game-image:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px #00e6ffcc;
+  }
+
+  #scrollTopBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: #00e6ff;
+    border: none;
+    padding: 12px 16px;
+    border-radius: 50%;
+    cursor: pointer;
+    box-shadow: 0 0 12px #00e6ffcc;
+    display: none;
+    transition: background-color 0.3s;
+    z-index: 1000;
+  }
+
+  #scrollTopBtn:hover {
+    background: #00b8cc;
+  }
+
+  footer {
+    text-align: center;
+    padding: 30px 20px;
+    background: #101525;
+    color: #88bdda;
+    font-size: 14px;
+  }
+
+  /* Mobile: max 768px */
+  @media (max-width: 768px) {
     nav {
-      position: fixed;
-      top: 0;
-      width: 100%;
-      background: #0ff;
-      text-align: center;
-      padding: 20px 0;
-      box-shadow: 0 4px 12px rgba(0, 255, 255, 0.3);
-      z-index: 999;
-      transition: background-color 0.3s ease;
+      padding: 15px 10px;
     }
+
     nav a {
-      color: #001133;
-      margin: 0 15px;
-      text-decoration: none;
-      font-weight: 600;
-      font-size: 16px;
-      transition: color 0.3s, text-shadow 0.3s;
-      position: relative;
+      font-size: 13px;
+      margin: 0 8px;
     }
-    nav a::after {
-      content: '';
-      position: absolute;
-      width: 0;
-      height: 2px;
-      background: #00e6ff;
-      left: 0;
-      bottom: -6px;
-      transition: width 0.3s;
-    }
-    nav a:hover, nav a.active {
-      color: #fff;
-      text-shadow: 0 0 8px #00e6ff;
-    }
-    nav a:hover::after, nav a.active::after {
-      width: 100%;
-    }
+
     section {
-      padding: 100px 30px;
-      border-bottom: 2px dashed #00e6ff;
-      max-width: 900px;
-      margin: 0 auto;
+      padding: 60px 15px;
     }
+
     h1, h2 {
-      font-family: 'Press Start 2P', cursive;
-      color: #00e6ff;
-      text-shadow: 2px 2px #003344;
-      margin-bottom: 30px;
-      font-size: 26px;
-      text-align: center;
+      font-size: 18px;
     }
+
     p {
-      font-size: 17px;
-      line-height: 1.7;
-      max-width: 800px;
-      margin: 0 auto 20px auto;
-    }
-    /* Bilder-Styling */
-    .game-image {
-      display: block;
-      max-width: 100%;
-      margin: 20px auto;
-      border: 3px solid #00e6ff;
-      border-radius: 12px;
-      box-shadow: 0 0 15px #00e6ff88;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-    }
-    .game-image:hover {
-      transform: scale(1.05);
-      box-shadow: 0 0 25px #00e6ffcc;
-    }
-    /* Scroll-to-top Button */
-    #scrollTopBtn {
-      position: fixed;
-      bottom: 40px;
-      right: 40px;
-      background: #00e6ff;
-      border: none;
-      padding: 12px 16px;
-      border-radius: 50%;
-      cursor: pointer;
-      box-shadow: 0 0 12px #00e6ffcc;
-      display: none;
-      transition: background-color 0.3s;
-      z-index: 1000;
-    }
-    #scrollTopBtn:hover {
-      background: #00b8cc;
-    }
-    footer {
-      text-align: center;
-      padding: 40px;
-      background: #101525;
-      color: #88bdda;
       font-size: 15px;
     }
-  </style>
+
+    #scrollTopBtn {
+      bottom: 15px;
+      right: 15px;
+    }
+  }
+
+  /* Extra small screens: max 480px */
+  @media (max-width: 480px) {
+    h1, h2 {
+      font-size: 16px;
+    }
+
+    nav a {
+      font-size: 12px;
+      margin: 0 5px;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
+</style>
 </head>
 <body>
 
