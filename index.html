@@ -342,8 +342,25 @@
       <div id="snake-container">
       <div id="snake-wrapper">
         <h3>🐍 Snake Mini-Game</h3>
-        <canvas id="snake-game" width="400" height="400"></canvas>
-        <button id="startSnakeBtn">🎮 Start Snake!</button>
+       <div style="position: relative; width: 400px; height: 400px;">
+  <canvas id="snake-game" width="400" height="400" style="position: absolute; top: 0; left: 0; z-index: 0;"></canvas>
+  <button id="startSnakeBtn" style="
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 1;
+    background: #00e6ff;
+    color: #001133;
+    font-weight: bold;
+    border: none;
+    padding: 12px 18px;
+    font-size: 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #00e6ff88;
+  ">🎮 Start Snake!</button>
+</div>
         <p><em>Nutze die Pfeiltasten oder wische auf dem Handy.<br>Wieviel Punkte schaffst du?</em></p>
       </div>
       <div id="highscore-board">
