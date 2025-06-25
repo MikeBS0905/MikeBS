@@ -195,48 +195,44 @@
       font-size: 14px;
     }
   }
-  #snake-wrapper {
+ 
+#snake-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
   margin: 40px auto;
-  text-align: center;
-  max-width: 420px;
+  max-width: 900px;
 }
 
-#snake-wrapper h3 {
-  color: #00e6ff;
-  font-family: 'Press Start 2P', cursive;
-  font-size: 18px;
-  margin-bottom: 10px;
-  text-shadow: 1px 1px #003344;
-}
-
-#snake-game {
+#highscore-board {
   background: #101525;
-  border: 4px solid #00e6ff;
-  border-radius: 8px;
+  border: 3px solid #00e6ff;
+  border-radius: 12px;
+  padding: 20px;
+  max-width: 300px;
   box-shadow: 0 0 20px #00e6ff88;
-  touch-action: none;
-  display: none;
 }
 
-#startSnakeBtn {
-  margin-top: 10px;
-  padding: 12px 20px;
-  background: #00e6ff;
-  border: none;
-  border-radius: 8px;
-  color: #001133;
+#highscore-board h3 {
+  font-family: 'Press Start 2P', cursive;
+  color: #00e6ff;
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+#highscore-list {
+  list-style: none;
+  padding-left: 0;
+  font-size: 15px;
+  color: #eaf6ff;
   font-family: 'Quicksand', sans-serif;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 0 12px #00e6ff88;
-  transition: background-color 0.3s ease;
 }
 
-#startSnakeBtn:hover {
-  background-color: #00b8cc;
+#highscore-list li {
+  margin-bottom: 10px;
 }
-  
-</style>
 </head>
 <body>
 
@@ -328,13 +324,20 @@
       🎯 <strong>Fortnite</strong> – Editiert schneller als sein Schatten<br />
       ⚡ <strong>Pokémon</strong> – 2x Shiny? Kein Zufall, nur Können.
     </p>
-    <div id="snake-wrapper">
-  <h3>🐍 Snake Mini-Game</h3>
-  <canvas id="snake-game" width="400" height="400"></canvas>
-  <button id="startSnakeBtn">🎮 Start Snake!</button>
-  <p style="text-align:center; margin-top: 10px;">
-    <em>Nutze die Pfeiltasten oder wische auf dem Handy.<br>Du hast das Zeug zur Legende!</em>
-  </p>
+    <div id="snake-container">
+  <div id="snake-wrapper">
+    <h3>🐍 Snake Mini-Game</h3>
+    <canvas id="snake-game" width="400" height="400"></canvas>
+    <button id="startSnakeBtn">🎮 Start Snake!</button>
+    <p>
+      <em>Nutze die Pfeiltasten oder wische auf dem Handy.<br>Wieviel Punkte schaffst du?</em>
+    </p>
+  </div>
+
+  <div id="highscore-board">
+    <h3>🏆 Bestenliste</h3>
+    <ol id="highscore-list"></ol>
+  </div>
 </div>
   </section>
 
@@ -403,6 +406,7 @@
   const canvas = document.getElementById("snake-game");
   const ctx = canvas.getContext("2d");
   const startBtn = document.getElementById("startSnakeBtn");
+  const highscoreList = document.getElementById("highscore-list");
 
   const box = 20;
   let snake, direction, food, score, game;
@@ -435,18 +439,17 @@
     if (direction === "UP") head.y -= box;
     if (direction === "DOWN") head.y += box;
 
-    // Wrap-Around statt Game Over bei Wand
-if (head.x < 0) head.x = canvas.width - box;
-if (head.x >= canvas.width) head.x = 0;
-if (head.y < 0) head.y = canvas.height - box;
-if (head.y >= canvas.height) head.y = 0;
+    // Wände = Wrap-Around
+    if (head.x < 0) head.x = canvas.width - box;
+    if (head.x >= canvas.width) head.x = 0;
+    if (head.y < 0) head.y = canvas.height - box;
+    if (head.y >= canvas.height) head.y = 0;
 
-// Game Over nur bei Selbstkollision
-if (snake.some((seg, idx) => idx !== 0 && seg.x === head.x && seg.y === head.y)) {
-  clearInterval(game);
-  alert("💥 Game Over! Du hast " + score + " Punkte erreicht.");
-  location.reload();
-}
+    // Game Over bei Selbstkollision
+    if (snake.some((seg, idx) => idx !== 0 && seg.x === head.x && seg.y === head.y)) {
+      clearInterval(game);
+      setTimeout(() => askForHighscore(score), 100); // Warte kurz, sonst doppelt
+    }
 
     snake.unshift(head);
 
@@ -498,6 +501,36 @@ if (snake.some((seg, idx) => idx !== 0 && seg.x === head.x && seg.y === head.y))
     initGame();
     game = setInterval(draw, 150);
   });
+
+  // 🏆 Highscore
+  function askForHighscore(score) {
+    const name = prompt("Game Over! Gib deinen Namen für die Bestenliste ein:");
+    if (!name) return;
+
+    const entry = { name: name.substring(0, 12), score: score };
+    const scores = JSON.parse(localStorage.getItem("snakeHighscores")) || [];
+
+    scores.push(entry);
+    scores.sort((a, b) => b.score - a.score);
+    const top10 = scores.slice(0, 10);
+
+    localStorage.setItem("snakeHighscores", JSON.stringify(top10));
+    updateHighscoreBoard(top10);
+
+    setTimeout(() => location.reload(), 500); // Seite neu laden nach Eintrag
+  }
+
+  function updateHighscoreBoard(scores = null) {
+    const highscores = scores || JSON.parse(localStorage.getItem("snakeHighscores")) || [];
+    highscoreList.innerHTML = "";
+    highscores.forEach((entry, i) => {
+      const li = document.createElement("li");
+      li.textContent = `${i + 1}. ${entry.name} – ${entry.score} Punkte`;
+      highscoreList.appendChild(li);
+    });
+  }
+
+  updateHighscoreBoard(); // beim Start laden
 </script>
 
 </body>
