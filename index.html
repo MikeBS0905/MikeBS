@@ -1,0 +1,293 @@
+
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <title>MikeBS – Gaming Star</title>
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Quicksand:wght@400;600&display=swap" rel="stylesheet" />
+
+  <style>
+    html {
+      scroll-behavior: smooth;
+    }
+    body {
+      margin: 0;
+      background: radial-gradient(circle at top, #1e1f3a 0%, #0a0d1a 100%);
+      color: #eaf6ff;
+      font-family: 'Quicksand', sans-serif;
+      padding-top: 80px;
+      overflow-x: hidden;
+    }
+    header {
+      position: relative;
+      text-align: center;
+      color: #00e6ff;
+      font-family: 'Press Start 2P', cursive;
+      text-shadow: 2px 2px #003344;
+    }
+    header img {
+      width: 100%;
+      max-height: 300px;
+      object-fit: cover;
+      filter: brightness(0.7);
+    }
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: #0ff;
+      text-align: center;
+      padding: 20px 0;
+      box-shadow: 0 4px 12px rgba(0, 255, 255, 0.3);
+      z-index: 999;
+      transition: background-color 0.3s ease;
+    }
+    nav a {
+      color: #001133;
+      margin: 0 15px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 16px;
+      transition: color 0.3s, text-shadow 0.3s;
+      position: relative;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      background: #00e6ff;
+      left: 0;
+      bottom: -6px;
+      transition: width 0.3s;
+    }
+    nav a:hover, nav a.active {
+      color: #fff;
+      text-shadow: 0 0 8px #00e6ff;
+    }
+    nav a:hover::after, nav a.active::after {
+      width: 100%;
+    }
+    section {
+      padding: 100px 30px;
+      border-bottom: 2px dashed #00e6ff;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    h1, h2 {
+      font-family: 'Press Start 2P', cursive;
+      color: #00e6ff;
+      text-shadow: 2px 2px #003344;
+      margin-bottom: 30px;
+      font-size: 26px;
+      text-align: center;
+    }
+    p {
+      font-size: 17px;
+      line-height: 1.7;
+      max-width: 800px;
+      margin: 0 auto 20px auto;
+    }
+    /* Bilder-Styling */
+    .game-image {
+      display: block;
+      max-width: 100%;
+      margin: 20px auto;
+      border: 3px solid #00e6ff;
+      border-radius: 12px;
+      box-shadow: 0 0 15px #00e6ff88;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .game-image:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 25px #00e6ffcc;
+    }
+    /* Scroll-to-top Button */
+    #scrollTopBtn {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      background: #00e6ff;
+      border: none;
+      padding: 12px 16px;
+      border-radius: 50%;
+      cursor: pointer;
+      box-shadow: 0 0 12px #00e6ffcc;
+      display: none;
+      transition: background-color 0.3s;
+      z-index: 1000;
+    }
+    #scrollTopBtn:hover {
+      background: #00b8cc;
+    }
+    footer {
+      text-align: center;
+      padding: 40px;
+      background: #101525;
+      color: #88bdda;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <!-- Passendes Gaming Bild mit Neon-Vibe -->
+  <img src="https://images.unsplash.com/photo-1617771079336-60f8a1b2d1b7?auto=format&fit=crop&w=1200&q=80" alt="Gaming PC Neon" />
+  <h1>Youtubestar MikeBS</h1>
+</header>
+
+<nav id="navbar">
+  <a href="#start" class="active">🏁 Start</a>
+  <a href="#ueber">👾 Über MikeBS</a>
+  <a href="#games">🎮 Games</a>
+  <a href="#videos">📺 Videos</a>
+  <a href="#kontakt">📡 Kontakt</a>
+</nav>
+
+<main>
+  <section id="start">
+    <h2>Yo! Willkommen in MikeBS Game-Zone! 🎮✨</h2>
+    <p>
+      Hier spielt nicht irgendwer.<br />
+      Hier spielt <strong>MikeBS</strong>.<br /><br />
+      <strong>Wenn er zockt, bebt die Lobby. Wenn er droppt, wird’s episch.</strong><br /><br />
+      <em>Fortnite?</em> Baut er blind.<br />
+      <em>Roblox?</em> Sein zweites Zuhause.<br />
+      <em>Brawlstars?</em> Ult auf cool.<br />
+      <em>Pokémon?</em> Fang sie alle – easy.<br /><br />
+      Wenn MikeBS droppt, wird’s legendär.<br />
+      Wenn er zockt, schauen selbst die Pros zu.<br />
+      <strong>🔥 No Hacks. Just Skill.</strong>
+    </p>
+    <p>
+      Auf dieser Seite findest du alles:<br />
+      💥 Seine Lieblingsgames<br />
+      🎥 Coole Clips & Highlights<br />
+      🤫 Geheimtipps direkt vom Boss<br />
+      🚀 Scroll rein, klick dich durch und werde Teil der #MikebsCrew.<br /><br />
+      <strong>👉 Du willst Teil der Crew sein? Dann:<br />Like. Scroll. Repeat. 😎🎧</strong><br /><br />
+      <em>🕹 Bereit für Level 1? Dann scroll dich durch Mikas Gaming-Welt.<br />
+      Let’s glow, Player Two! 🎮💥</em>
+    </p>
+  </section>
+
+  <section id="ueber">
+    <h2>👾 Über MikeBS</h2>
+    <p>
+      Hey! Ich bin MikeBS – Gamer, Glitch-Hunter und pixelperfekter Pro
+      seit Level 5 (also… seit ich denken kann 😎).
+    </p>
+    <p>
+      Ich liebe Games mit Herz, Hype und Hidden Secrets.
+      Meine Spezialgebiete: Fortnite Bauen wie ein Blitz, Roblox-Welten
+      erkunden, Brawl Stars mit Style gewinnen und Pokémon schneller
+      fangen als du „Pika“ sagen kannst.<br /><br />
+      Ich spiele nicht nur.<br />
+      Ich lebe Games.
+    </p>
+    <p>
+      <strong>Meine Ausrüstung?</strong><br />
+      🎮 Ein Controller mit Turbo-Power<br />
+      🎧 Kopfhörer mit Boss-Mode<br />
+      💻 Ein Setup, das leuchtet wie ein Regenbogen
+    </p>
+    <p>
+      Mein Motto?<br />
+      „Play smart. Play fair. Play loud.“
+    </p>
+    <p>
+      Wenn ich mal nicht zocke, findest du mich auf dem Fußballplatz,
+      esse Pizza mit Peperoni oder bringe meinen Hund in Sicherheit,
+      wenn ich im Spiel zu laut schreie 😅<br /><br />
+      <strong>Mein größter Traum?</strong><br />
+      Einmal auf der großen Bühne bei einem Fortnite-Turnier stehen –
+      oder in einem echten YouTube-Video auftauchen mit Millionen Klicks.
+    </p>
+    <p>
+      Aber bis dahin: Willkommen auf meinem Planeten.<br />
+      Du bist jetzt Teil von Team MikeBS.<br /><br />
+      <em>Stay tuned. Stay true. Let’s goooo. 🎮🔥</em>
+    </p>
+  </section>
+
+  <section id="games">
+    <h2>🎮 Lieblingsgames</h2>
+    <!-- Bilder, die sicher laden -->
+    <img src="https://images.unsplash.com/photo-1617771079336-60f8a1b2d1b7?auto=format&fit=crop&w=1200&q=80" alt="Gaming PC Neon" class="game-image" />
+    <img src="https://images.unsplash.com/photo-1605361721563-f904716f7ac9?auto=format&fit=crop&w=800&q=80" alt="PlayStation Controller Neon" class="game-image" />
+    <p>
+      🧨 <strong>Brawl Stars</strong> – Meister des Mid-Range<br />
+      🧱 <strong>Roblox</strong> – Weltenbauer mit Fantasie<br />
+      🎯 <strong>Fortnite</strong> – Editiert schneller als sein Schatten<br />
+      ⚡ <strong>Pokémon</strong> – 2x Shiny? Kein Zufall, nur Können.
+    </p>
+  </section>
+
+  <section id="videos">
+    <h2>📺 Videos & Highlights</h2>
+    <p>
+      Clips in Vorbereitung: Ult-Saves, Fast-Wins und epische Fails (ja, auch die!).<br />
+      Stay tuned für sein erstes offizielles YouTube-Debut – mit mehr Neon als dein Bildschirm verkraften kann.
+    </p>
+  </section>
+
+  <section id="kontakt">
+    <h2>📡 Kontakt</h2>
+    <p>
+      Fanpost? Clan-Anfragen? Kakao-Rezepte?<br />
+      MikeBS erreicht man am besten über den geheimen Familien-Discord – oder frag Mama.
+    </p>
+  </section>
+</main>
+
+<!-- Scroll to Top Button -->
+<button id="scrollTopBtn" title="Nach oben scrollen">⬆️</button>
+
+<footer>
+  &copy; 2025 MikeBS. Powered by Pixel, Kakao und Skill.
+</footer>
+
+<script>
+  // Scroll to top Button
+  const scrollTopBtn = document.getElementById('scrollTopBtn');
+
+  window.onscroll = () => {
+    if (document.documentElement.scrollTop > 300) {
+      scrollTopBtn.style.display = 'block';
+    } else {
+      scrollTopBtn.style.display = 'none';
+    }
+
+    // Aktiven Navi-Link setzen
+    const sections = document.querySelectorAll('section');
+    const navLinks = document.querySelectorAll('nav a');
+
+    let current = '';
+
+    sections.forEach(section => {
+      const sectionTop = section.offsetTop - 120;
+      if (window.pageYOffset >= sectionTop) {
+        current = section.getAttribute('id');
+      }
+    });
+
+    navLinks.forEach(link => {
+      link.classList.remove('active');
+      if (link.getAttribute('href') === '#' + current) {
+        link.classList.add('active');
+      }
+    });
+  };
+
+  scrollTopBtn.addEventListener('click', () => {
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  });
+</script>
+
+</body>
+</html>
