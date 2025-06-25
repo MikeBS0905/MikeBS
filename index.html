@@ -509,7 +509,38 @@
     startBtn.style.display = "none";
     initGame();
     game = setInterval(draw, 150);
+    gameActive = true;
   });
+
+// Touch-Steuerung überall + Scroll-Sperre während des Spiels
+let touchStartX = null, touchStartY = null;
+
+document.body.addEventListener("touchstart", (e) => {
+  if (!gameActive) return;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
+
+document.body.addEventListener("touchmove", (e) => {
+  if (!gameActive) return;
+  e.preventDefault();
+
+  if (touchStartX === null || touchStartY === null) return;
+
+  const dx = e.touches[0].clientX - touchStartX;
+  const dy = e.touches[0].clientY - touchStartY;
+
+  if (Math.abs(dx) > Math.abs(dy)) {
+    if (dx > 0 && direction !== "LEFT") direction = "RIGHT";
+    else if (dx < 0 && direction !== "RIGHT") direction = "LEFT";
+  } else {
+    if (dy > 0 && direction !== "UP") direction = "DOWN";
+    else if (dy < 0 && direction !== "DOWN") direction = "UP";
+  }
+
+  touchStartX = null;
+  touchStartY = null;
+}, { passive: false });
 
   function askForHighscore(score) {
     const name = prompt("Game Over! Gib deinen Namen für die Bestenliste ein:");
