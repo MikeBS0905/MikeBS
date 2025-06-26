@@ -524,6 +524,22 @@ canvas#jgCanvas {
   <div id="jumpGlideContainer">
     <canvas id="jgCanvas" width="600" height="400"></canvas>
   </div>
+
+  <button id="startJumpGameBtn"
+    style="margin: 20px auto; display: block; background:#00e6ff; color:#001133; font-weight: bold;
+    padding: 14px 24px; font-size: 18px; border-radius: 10px; border: none; cursor: pointer;
+    box-shadow: 0 0 12px #00e6ffcc;">
+    🎮 Spiel starten!
+  </button>
+
+  <div id="jumpHighscoreBoard"
+    style="margin-top: 30px; background: #101525; border: 3px solid #00e6ff;
+    border-radius: 12px; padding: 20px; max-width: 400px; margin-left:auto; margin-right:auto;">
+    <h3 style="text-align:center; font-family:'Press Start 2P', cursive; color:#00e6ff;">🏆 Bestenliste</h3>
+    <ol id="jumpHighscoreList"
+      style="color: #eaf6ff; font-size: 16px; font-family: 'Quicksand', sans-serif;">
+    </ol>
+  </div>
 </section>
 
 
@@ -848,6 +864,12 @@ function updateJGHighscore(scores = null) {
   const jumpStrength = -12;
   let obstacles = [];
   let gameRunning = false;
+  
+  const gameBox = document.getElementById('jumpGlideContainer');
+const canvasJ = document.getElementById('jgCanvas');
+const gameSection = document.getElementById('jumpGameSection');
+const highscoreList = document.getElementById('jumpHighscoreList');
+const startBtn = document.getElementById('startJumpGameBtn');
 
   function initGame() {
     obstacles = [];
@@ -963,6 +985,12 @@ function updateJGHighscore(scores = null) {
       jump();
     }
   }, {passive: true});
+  
+  startBtn.addEventListener('click', () => {
+  score = 0;
+  openGame();
+});
+  
 </script>
 
 </body>
