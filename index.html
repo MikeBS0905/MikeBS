@@ -862,15 +862,17 @@ canvas#jgCanvas {
 
  // Rätsel Antwort prüfen - Eventlistener
 input.addEventListener('keydown', e => {
-  if (e.key === 'Enter') {
-    if (input.value.trim().toLowerCase() === 'flasche') {
+  if (e.key === 'Enter' || e.keyCode === 13) {  // sichert auch ältere Browser/Tastaturen ab
+    e.preventDefault(); // Verhindert, dass das Formular ggf. abgesendet wird oder die Tastatur sich unerwartet verhält
+    const answer = input.value.trim().toLowerCase();
+    if (answer === 'flasche') {
       modal.style.display = 'none';
       stopGlitter();
-      // Starte das Spiel nicht sofort, sondern zeige den Start-Button
       document.getElementById('startJumpGameBtn').style.display = 'block';
     } else {
       alert('Falsch – versuch’s nochmal!');
       input.value = '';
+      input.focus(); // Fokus zurück ins Eingabefeld, damit man direkt neu tippen kann
     }
   }
 });
