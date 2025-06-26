@@ -587,172 +587,160 @@ canvas#jgCanvas {
 </script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const canvas = document.getElementById("snake-game");
-    const ctx = canvas.getContext("2d");
-    const startBtn = document.getElementById("startSnakeBtn");
-    const highscoreList = document.getElementById("highscore-list");
+ document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("snake-game");
+  const ctx = canvas.getContext("2d");
+  const startBtn = document.getElementById("startSnakeBtn");
+  const highscoreList = document.getElementById("highscore-list");
 
-    const box = 20;
-    let snake, direction, food, score, game;
-    let gameActive = false;
+  const box = 20;
+  let snake, direction, food, score, game;
+  let gameActive = false;
 
-    function initGame() {
-      snake = [{ x: 5 * box, y: 5 * box }];
-      direction = "RIGHT";
-      function generateFood() {
-  let newFood;
-  do {
-    newFood = {
-      x: Math.floor(Math.random() * (canvas.width / box )) * box,
-      y: Math.floor(Math.random() * (canvas.height / box )) * box
-    };
-  } while (snake.some(seg => seg.x === newFood.x && seg.y === newFood.y));
-  return newFood;
-}
-      score = 0;
-food = generateFood();
-    }
+  // 🧠 Futter zufällig erzeugen – exakt im Raster
+  function generateFood() {
+    let newFood;
+    do {
+      newFood = {
+        x: Math.floor(Math.random() * (canvas.width / box)) * box,
+        y: Math.floor(Math.random() * (canvas.height / box)) * box
+      };
+    } while (snake.some(seg => seg.x === newFood.x && seg.y === newFood.y));
+    return newFood;
+  }
 
-    function draw() {
-      ctx.fillStyle = "#101525";
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
+  // 🐍 Spiel starten / initialisieren
+  function initGame() {
+    snake = [{ x: 5 * box, y: 5 * box }];
+    direction = "RIGHT";
+    score = 0;
+    food = generateFood();
+  }
 
-      snake.forEach((seg, i) => {
-        ctx.fillStyle = i === 0 ? "#00e6ff" : "#007788";
-        ctx.fillRect(seg.x, seg.y, box, box);
-      });
+  // 🖼 Spiel zeichnen
+  function draw() {
+    // Hintergrund löschen
+    ctx.fillStyle = "#101525";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      ctx.fillStyle = "#ff3366";
-      ctx.fillRect(food.x, food.y, box, box);
-
-      let head = { x: snake[0].x, y: snake[0].y };
-      if (direction === "LEFT") head.x -= box;
-      if (direction === "RIGHT") head.x += box;
-      if (direction === "UP") head.y -= box;
-      if (direction === "DOWN") head.y += box;
-
-      if (head.x < 0) head.x = canvas.width - box;
-      if (head.x >= canvas.width) head.x = 0;
-      if (head.y < 0) head.y = canvas.height - box;
-      if (head.y >= canvas.height) head.y = 0;
-
-      if (snake.some((seg, idx) => idx !== 0 && seg.x === head.x && seg.y === head.y)) {
-        clearInterval(game);
-        gameActive = false;
-        setTimeout(() => askForHighscore(score), 100);
-      }
-snake.unshift(head);
-
-if (head.x === food.x && head.y === food.y) {
-  score++;
-  food = generateFood();
-} else {
-  snake.pop();
-}
-
-    }
-
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
-      else if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
-      else if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
-      else if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+    // Schlange zeichnen
+    snake.forEach((seg, i) => {
+      ctx.fillStyle = i === 0 ? "#00e6ff" : "#007788";
+      ctx.fillRect(seg.x, seg.y, box, box);
     });
 
-    startBtn.addEventListener("click", () => {
-      canvas.style.display = "block";
-      startBtn.style.display = "none";
-      initGame();
-      game = setInterval(draw, 150);
-      gameActive = true;
-    });
+    // Futter zeichnen
+    ctx.fillStyle = "#ff3366";
+    ctx.fillRect(food.x, food.y, box, box);
 
-    // Touchsteuerung überall + Scroll verhindern
-    let touchStartX = null, touchStartY = null;
+    // Kopf bewegen
+    let head = { x: snake[0].x, y: snake[0].y };
+    if (direction === "LEFT") head.x -= box;
+    if (direction === "RIGHT") head.x += box;
+    if (direction === "UP") head.y -= box;
+    if (direction === "DOWN") head.y += box;
 
-    document.body.addEventListener("touchstart", (e) => {
-      if (!gameActive) return;
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
-    }, { passive: false });
+    // Wand-Teleport
+    if (head.x < 0) head.x = canvas.width - box;
+    if (head.x >= canvas.width) head.x = 0;
+    if (head.y < 0) head.y = canvas.height - box;
+    if (head.y >= canvas.height) head.y = 0;
 
-    document.body.addEventListener("touchmove", (e) => {
-      if (!gameActive) return;
-      e.preventDefault();
-
-      if (touchStartX === null || touchStartY === null) return;
-
-      const dx = e.touches[0].clientX - touchStartX;
-      const dy = e.touches[0].clientY - touchStartY;
-
-      if (Math.abs(dx) > Math.abs(dy)) {
-        if (dx > 0 && direction !== "LEFT") direction = "RIGHT";
-        else if (dx < 0 && direction !== "RIGHT") direction = "LEFT";
-      } else {
-        if (dy > 0 && direction !== "UP") direction = "DOWN";
-        else if (dy < 0 && direction !== "DOWN") direction = "UP";
-      }
-
-      touchStartX = null;
-      touchStartY = null;
-    }, { passive: false });
-
-    function askForHighscore(score) {
-      const name = prompt("Game Over! Gib deinen Namen für die Bestenliste ein:");
-      if (!name) return;
-      const entry = { name: name.substring(0, 12), score };
-      const scores = JSON.parse(localStorage.getItem("snakeHighscores")) || [];
-      scores.push(entry);
-      scores.sort((a, b) => b.score - a.score);
-      const top10 = scores.slice(0, 10);
-      localStorage.setItem("snakeHighscores", JSON.stringify(top10));
-      updateHighscoreBoard(top10);
-      setTimeout(() => location.reload(), 500);
+    // Kollision mit sich selbst?
+    if (snake.some((seg, idx) => idx !== 0 && seg.x === head.x && seg.y === head.y)) {
+      clearInterval(game);
+      gameActive = false;
+      setTimeout(() => askForHighscore(score), 100);
+      return;
     }
 
-    function updateHighscoreBoard(scores = null) {
-      const highscores = scores || JSON.parse(localStorage.getItem("snakeHighscores")) || [];
-      highscoreList.innerHTML = "";
-      highscores.forEach((entry, i) => {
-        const li = document.createElement("li");
-        li.textContent = `${i + 1}. ${entry.name} – ${entry.score} Punkte`;
-        highscoreList.appendChild(li);
-      });
-    }
+    // Neuen Kopf hinzufügen
+    snake.unshift(head);
 
-    updateHighscoreBoard();
+    // Fressen?
+    if (head.x === food.x && head.y === food.y) {
+      score++;
+      food = generateFood(); // Neues Futter
+    } else {
+      snake.pop(); // kein Futter → normal weiterfahren
+    }
+  }
+
+  // ▶️ Start-Button klick
+  startBtn.addEventListener("click", () => {
+    canvas.style.display = "block";
+    startBtn.style.display = "none";
+    initGame();
+    game = setInterval(draw, 150);
+    gameActive = true;
   });
-  
-  document.getElementById("startJumpGlideBtn").addEventListener("click", () => {
-  document.getElementById("jumpGlideStarter").style.display = "none";
-  openGame(); // Startet das Spiel
+
+  // ⌨️ Steuerung: Tastatur
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowLeft" && direction !== "RIGHT") direction = "LEFT";
+    else if (e.key === "ArrowUp" && direction !== "DOWN") direction = "UP";
+    else if (e.key === "ArrowRight" && direction !== "LEFT") direction = "RIGHT";
+    else if (e.key === "ArrowDown" && direction !== "UP") direction = "DOWN";
+  });
+
+  // 🤳 Steuerung: Touch
+  let touchStartX = null, touchStartY = null;
+
+  document.body.addEventListener("touchstart", (e) => {
+    if (!gameActive) return;
+    touchStartX = e.touches[0].clientX;
+    touchStartY = e.touches[0].clientY;
+  }, { passive: false });
+
+  document.body.addEventListener("touchmove", (e) => {
+    if (!gameActive) return;
+    e.preventDefault();
+
+    if (touchStartX === null || touchStartY === null) return;
+
+    const dx = e.touches[0].clientX - touchStartX;
+    const dy = e.touches[0].clientY - touchStartY;
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (dx > 0 && direction !== "LEFT") direction = "RIGHT";
+      else if (dx < 0 && direction !== "RIGHT") direction = "LEFT";
+    } else {
+      if (dy > 0 && direction !== "UP") direction = "DOWN";
+      else if (dy < 0 && direction !== "DOWN") direction = "UP";
+    }
+
+    touchStartX = null;
+    touchStartY = null;
+  }, { passive: false });
+
+  // 🏆 Highscore speichern
+  function askForHighscore(score) {
+    const name = prompt("Game Over! Gib deinen Namen für die Bestenliste ein:");
+    if (!name) return;
+    const entry = { name: name.substring(0, 12), score };
+    const scores = JSON.parse(localStorage.getItem("snakeHighscores")) || [];
+    scores.push(entry);
+    scores.sort((a, b) => b.score - a.score);
+    const top10 = scores.slice(0, 10);
+    localStorage.setItem("snakeHighscores", JSON.stringify(top10));
+    updateHighscoreBoard(top10);
+    setTimeout(() => location.reload(), 500);
+  }
+
+  function updateHighscoreBoard(scores = null) {
+    const highscores = scores || JSON.parse(localStorage.getItem("snakeHighscores")) || [];
+    highscoreList.innerHTML = "";
+    highscores.forEach((entry, i) => {
+      const li = document.createElement("li");
+      li.textContent = `${i + 1}. ${entry.name} – ${entry.score} Punkte`;
+      highscoreList.appendChild(li);
+    });
+  }
+
+  // ⬆️ Gleich beim Laden: Highscore anzeigen
+  updateHighscoreBoard();
 });
 
-function askForJGHighscore(score) {
-  const name = prompt("Game Over! Wie heißt du?");
-  if (!name) return;
-
-  const entry = { name: name.substring(0, 12), score };
-  const scores = JSON.parse(localStorage.getItem("jgHighscores")) || [];
-  scores.push(entry);
-  scores.sort((a, b) => b.score - a.score);
-  const top10 = scores.slice(0, 10);
-  localStorage.setItem("jgHighscores", JSON.stringify(top10));
-  updateJGHighscore(top10);
-  document.getElementById("jgHighscoreBoard").style.display = "block";
-}
-
-function updateJGHighscore(scores = null) {
-  const list = document.getElementById("jgHighscoreList");
-  const highscores = scores || JSON.parse(localStorage.getItem("jgHighscores")) || [];
-  list.innerHTML = "";
-  highscores.forEach((entry, i) => {
-    const li = document.createElement("li");
-    li.textContent = `${i + 1}. ${entry.name} – ${entry.score} Punkte`;
-    list.appendChild(li);
-  });
-}
 </script>
 
 
