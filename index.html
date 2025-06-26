@@ -527,6 +527,11 @@ canvas#jgCanvas {
   "/>
 </div>
 
+<div id="riddleModal">
+  <input id="riddleAnswer" type="text" placeholder="Antwort eingeben …">
+  <button id="confirmRiddleBtn">Bestätigen</button>
+</div>
+
 <!-- 🪂 Jump & Glide Spiel -->
 <section id="jumpGameSection" style="text-align: center; margin-top: 60px;">
   <button id="startJumpGameBtn" style="
@@ -862,19 +867,28 @@ canvas#jgCanvas {
 
  // Rätsel Antwort prüfen - Eventlistener
 input.addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.keyCode === 13) {  // sichert auch ältere Browser/Tastaturen ab
-    e.preventDefault(); // Verhindert, dass das Formular ggf. abgesendet wird oder die Tastatur sich unerwartet verhält
-    const answer = input.value.trim().toLowerCase();
-    if (answer === 'flasche') {
-      modal.style.display = 'none';
-      stopGlitter();
-      document.getElementById('startJumpGameBtn').style.display = 'block';
-    } else {
-      alert('Falsch – versuch’s nochmal!');
-      input.value = '';
-      input.focus(); // Fokus zurück ins Eingabefeld, damit man direkt neu tippen kann
-    }
+  if (e.key === 'Enter' || e.keyCode === 13) {
+    e.preventDefault();
+    checkRiddleAnswer();
   }
+});
+
+confirmBtn.addEventListener('click', () => {
+  checkRiddleAnswer();
+});
+
+function checkRiddleAnswer() {
+  const answer = input.value.trim().toLowerCase();
+  if (answer === 'flasche') {
+    modal.style.display = 'none';
+    stopGlitter();
+    document.getElementById('startJumpGameBtn').style.display = 'block';
+  } else {
+    alert('Falsch – versuch’s nochmal!');
+    input.value = '';
+    input.focus();
+  }
+}
 });
 
   // --- Jump & Glide Spiel ---
