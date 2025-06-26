@@ -271,6 +271,10 @@
   font-size: 14px;
   list-style-position: inside;
 }
+#gameSelector {
+  width: 100%;
+  max-width: 360px;
+}
 </style>
 </head>
 <body>
@@ -563,88 +567,104 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     else if (sel === "bonus") {
+  area.innerHTML = `
+    <p><em>🔒 Rätsel:</em> Was hat einen Hals, aber keinen Kopf?</p>
+    <button id="check">Antwort eingeben</button>`;
+  
+  document.getElementById('check').onclick = () => {
+    const a = prompt("Antwort?").trim().toLowerCase();
+
+    if (a === 'flasche') {
       area.innerHTML = `
-        <p><em>🔒 Rätsel:</em> Was hat einen Hals, aber keinen Kopf?</p>
-        <button id="check">Antwort eingeben</button>`;
-      document.getElementById('check').onclick = () => {
-        const a = prompt("Antwort?").trim().toLowerCase();
-        if (a === 'flasche') {
-          area.innerHTML = `
-          <div id="jumpBox" 
-     style="width:300px; 
-            height:300px; 
-            background:#101525; 
-            margin:auto; 
-            border:3px solid #00e6ff; 
-            border-radius:12px; 
-            box-shadow: 0 0 20px #00e6ff88; 
-            position:relative; 
-            overflow:hidden;">
-  <div id="player" 
-       style="width:20px; 
-              height:20px; 
-              background:#0f0; 
-              position:absolute; 
-              bottom:0; 
-              left:140px; 
-              border-radius:4px; 
-              box-shadow: 0 0 10px #0f0;"></div>
-</div>
-<button id="startJump" 
-        style="display:block; 
-               margin:15px auto; 
-               padding:10px 20px; 
-               font-family: 'Press Start 2P', cursive; 
-               font-size:16px; 
-               background:#00e6ff; 
-               border:none; 
-               border-radius:12px; 
-               color:#001133; 
-               cursor:pointer; 
-               box-shadow: 0 0 15px #00e6ffcc;">
-  Start Jump & Glide
-  `;
-</button>
-          let jump, glide, score=0, gameT;
-          const pb = document.getElementById('player');
-          document.getElementById('startJump').onclick = ()=>{
-            jump = false; glide=false; score=0;
-            const js = () => {
-              const x = Math.random()*280;
-              const o = document.createElement('div');
-              o.style="width:20px;height:20px;background:#f00;position:absolute;top:0;left:"+x+"px;";
-              document.getElementById('jumpBox').appendChild(o);
-              let t = setInterval(()=>{
-                const top = parseFloat(o.style.top);
-                if(!jump) o.style.top = top+4+'px';
-                else o.style.top = top-4+'px';
-                if(top>280) { clearInterval(t); o.remove(); score--; }
-                if(top<0){ clearInterval(t); o.remove(); score++; }
-                pb.style.bottom = jump ? '20px' : '0';
-                jump=false;
-                if(score>9) endJump();
-              },50);
-            };
-            gameT = setInterval(js,800);
-            document.addEventListener('keydown', e => {
-              if(e.key===' '|| e.key==='ArrowUp') jump=true;
-            });
-          };
-          function endJump(){
-            clearInterval(gameT);
-            const name = prompt("Name?")||"---";
-            const arr = JSON.parse(localStorage.getItem('jumpHS'))||[];
-            arr.push({name,score});
-            arr.sort((a,b)=>b.score-a.score);
-            localStorage.setItem('jumpHS',JSON.stringify(arr.slice(0,10)));
-            area.innerHTML += `<p>✔️ Jump & Glide beendet! Score: ${score}</p>`;
-            insertHighscore('jumpHS');
-          }
-        } else alert("Falsch, versuch's noch mal!");
+        <div id="jumpBox" 
+             style="width:300px; 
+                    height:300px; 
+                    background:#101525; 
+                    margin:auto; 
+                    border:3px solid #00e6ff; 
+                    border-radius:12px; 
+                    box-shadow: 0 0 20px #00e6ff88; 
+                    position:relative; 
+                    overflow:hidden;">
+          <div id="player" 
+               style="width:20px; 
+                      height:20px; 
+                      background:#0f0; 
+                      position:absolute; 
+                      bottom:0; 
+                      left:140px; 
+                      border-radius:4px; 
+                      box-shadow: 0 0 10px #0f0;">
+          </div>
+        </div>
+        <button id="startJump" 
+                style="display:block; 
+                       margin:15px auto; 
+                       padding:10px 20px; 
+                       font-family: 'Press Start 2P', cursive; 
+                       font-size:16px; 
+                       background:#00e6ff; 
+                       border:none; 
+                       border-radius:12px; 
+                       color:#001133; 
+                       cursor:pointer; 
+                       box-shadow: 0 0 15px #00e6ffcc;">
+          Start Jump & Glide
+        </button>
+      `;
+
+      let jump, glide, score = 0, gameT;
+      const pb = document.getElementById('player');
+
+      document.getElementById('startJump').onclick = () => {
+        jump = false;
+        glide = false;
+        score = 0;
+
+        const js = () => {
+          const x = Math.random() * 280;
+          const o = document.createElement('div');
+          o.style = "width:20px;height:20px;background:#f00;position:absolute;top:0;left:" + x + "px;";
+          document.getElementById('jumpBox').appendChild(o);
+
+          let t = setInterval(() => {
+            const top = parseFloat(o.style.top);
+            if (!jump) o.style.top = top + 4 + 'px';
+            else o.style.top = top - 4 + 'px';
+
+            if (top > 280) { clearInterval(t); o.remove(); score--; }
+            if (top < 0) { clearInterval(t); o.remove(); score++; }
+
+            pb.style.bottom = jump ? '20px' : '0';
+            jump = false;
+
+            if (score > 9) endJump();
+          }, 50);
+        };
+
+        gameT = setInterval(js, 800);
+
+        document.addEventListener('keydown', e => {
+          if (e.key === ' ' || e.key === 'ArrowUp') jump = true;
+        });
       };
+
+      function endJump() {
+        clearInterval(gameT);
+        const name = prompt("Name?") || "---";
+        const arr = JSON.parse(localStorage.getItem('jumpHS')) || [];
+        arr.push({ name, score });
+        arr.sort((a, b) => b.score - a.score);
+        localStorage.setItem('jumpHS', JSON.stringify(arr.slice(0, 10)));
+        area.innerHTML += `<p>✔️ Jump & Glide beendet! Score: ${score}</p>`;
+        insertHighscore('jumpHS');
+      }
+
+    } else {
+      alert("Falsch, versuch's noch mal!");
     }
-  });
-});
+  };
+}
 </script>
 
   <section id="videos">
