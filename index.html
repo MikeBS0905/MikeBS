@@ -339,36 +339,248 @@
       🎯 <strong>Fortnite</strong> – Editiert schneller als sein Schatten<br />
       ⚡ <strong>Pokémon</strong> – 2x Shiny? Kein Zufall, nur Können.
     </p>
-      <div id="snake-container">
-      <div id="snake-wrapper">
-        <h3>🐍 Snake Mini-Game</h3>
-       <div style="position: relative; width: 300px; height: 300px;">
-  <canvas id="snake-game" width="300" height="300" style="position: absolute; top: 0; left: 0; z-index: 0;"></canvas>
-  <button id="startSnakeBtn" style="
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    z-index: 1;
-    background: #00e6ff;
-    color: #001133;
-    font-weight: bold;
-    border: none;
-    padding: 12px 18px;
-    font-size: 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    box-shadow: 0 0 10px #00e6ff88;
-  ">🎮 Start Snake!</button>
-</div>
-        <p><em>Nutze die Pfeiltasten oder wische auf dem Handy.<br>Wieviel Punkte schaffst du?</em></p>
-      </div>
-      <div id="highscore-board">
-        <h3>🏆 Bestenliste</h3>
-        <ol id="highscore-list"></ol>
-      </div>
-    </div>
-  </section>
+
+  <div style="text-align:center; margin-bottom:20px;">
+    <select id="gameSelector" style="font-size:16px; padding:8px; border-radius:8px;">
+      <option value="">– Wähle ein Spiel –</option>
+      <option value="snake">🐍 Snake</option>
+      <option value="pixel">🟪 Pixelklicker</option>
+      <option value="ziel">🎯 Zielschießen</option>
+      <option value="bonus">🔒 Geheimspiel</option>
+    </select>
+  </div>
+  <div id="gameArea"></div>
+</section>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const area = document.getElementById("gameArea");
+  const select = document.getElementById("gameSelector");
+
+  function clearArea() {
+    area.innerHTML = "";
+  }
+
+  function insertHighscore(id) {
+    const scores = JSON.parse(localStorage.getItem(id)) || [];
+    let html = '<ol>';
+    scores.forEach((e,i) => html += `<li>${i+1}. ${e.name} – ${e.score}</li>`);
+    html += '</ol>';
+    area.innerHTML += `<div style="margin-top:10px;"><h4>🏆 Bestenliste</h4>${html}</div>`;
+  }
+
+  select.addEventListener("change", () => {
+    clearArea();
+    const sel = select.value;
+
+    if (sel === "snake") {
+      area.innerHTML = `
+        <canvas id="c_snake" width="300" height="300"
+          style="border:2px solid #00e6ff; display:block; margin:auto;"></canvas>
+        <button id="b_snake" style="display:block; margin:10px auto;">Start Snake!</button>`;
+      insertHighscore('snakeHS');
+
+      const c = document.getElementById("c_snake");
+      const ctx = c.getContext("2d");
+      const b = document.getElementById("b_snake");
+      const box = 20;
+      let snake, dir, food, score, game, active;
+
+      function init() {
+        snake = [{x:5*box,y:5*box}];
+        dir = 'RIGHT';
+        food = {x: Math.floor(Math.random()*15)*box, y: Math.floor(Math.random()*15)*box};
+        score = 0;
+      }
+      function draw() {
+        ctx.fillStyle="#101525"; ctx.fillRect(0,0,300,300);
+        snake.forEach((s,i)=>{ ctx.fillStyle = i? '#007788':'#00e6ff'; ctx.fillRect(s.x,s.y,box,box); });
+        ctx.fillStyle="#ff3366"; ctx.fillRect(food.x, food.y, box, box);
+        let h = {...snake[0]};
+        if(dir==='LEFT') h.x-=box;
+        if(dir==='RIGHT') h.x+=box;
+        if(dir==='UP') h.y-=box;
+        if(dir==='DOWN') h.y+=box;
+        if(h.x<0) h.x=280; if(h.x>280) h.x=0;
+        if(h.y<0) h.y=280; if(h.y>280) h.y=0;
+        if(snake.some((s,i)=>i && s.x===h.x && s.y===h.y)) return end();
+        snake.unshift(h);
+        if(h.x===food.x && h.y===food.y){
+          score++;
+          food = {x: Math.floor(Math.random()*15)*box, y: Math.floor(Math.random()*15)*box};
+        } else snake.pop();
+      }
+      function end(){
+        clearInterval(game);
+        active=false;
+        setTimeout(()=>{const name=prompt("Name für HS?")||"---";
+          const arr = JSON.parse(localStorage.getItem('snakeHS'))||[];
+          arr.push({name,score});
+          arr.sort((a,b)=>b.score-a.score);
+          localStorage.setItem('snakeHS',JSON.stringify(arr.slice(0,10)));
+          area.innerHTML = "<p>✔️ Spiel beendet! Highscore aktualisiert.</p>";
+          insertHighscore('snakeHS');
+        },100);
+      }
+      document.addEventListener('keydown',(e)=>{
+        if(!active) return;
+        if(e.key==='ArrowLeft' && dir!=='RIGHT') dir='LEFT';
+        if(e.key==='ArrowRight' && dir!=='LEFT') dir='RIGHT';
+        if(e.key==='ArrowUp' && dir!=='DOWN') dir='UP';
+        if(e.key==='ArrowDown' && dir!=='UP') dir='DOWN';
+      });
+      b.addEventListener("click",()=>{
+        init();
+        game = setInterval(draw,150);
+        active=true;
+        b.style.display='none';
+      });
+    }
+
+    else if (sel === "pixel") {
+      area.innerHTML = `
+        <div id="pixelBox" style="position:relative; width:300px; height:300px; margin:auto; background:#101525; border:2px solid #00e6ff;"></div>
+        <button id="startPix" style="display:block; margin:10px auto;">Start Pixel!</button>`;
+      insertHighscore('pixelHS');
+
+      const box = document.getElementById('pixelBox');
+      const bt = document.getElementById('startPix');
+      let start, target, timer;
+
+      bt.onclick = ()=>{
+        box.innerHTML = '';
+        bt.style.display = 'none';
+        start = Date.now();
+        target = document.createElement('div');
+        target.style = "width:20px; height:20px; background:red; position:absolute; border-radius:50%;";
+        const x = Math.random()*280, y = Math.random()*280;
+        target.style.left = x+'px'; target.style.top = y+'px';
+        box.appendChild(target);
+        timer = setTimeout(() => bt.style.display = 'block', 3000);
+        target.onclick = ()=>{
+          clearTimeout(timer);
+          const time = Date.now()-start;
+          const name=prompt("Name?")||"---";
+          const arr = JSON.parse(localStorage.getItem('pixelHS'))||[];
+          arr.push({name,score:time});
+          arr.sort((a,b)=>a.score-b.score);
+          localStorage.setItem('pixelHS',JSON.stringify(arr.slice(0,10)));
+          area.innerHTML = `<p>⌛ Du warst ${time} ms schnell!</p>`;
+          insertHighscore('pixelHS');
+        };
+      };
+    }
+
+    else if (sel === "ziel") {
+      area.innerHTML = `
+        <div id="zielBox" style="position:relative; width:300px; height:300px; margin:auto; background:#101525; border:2px solid #00e6ff;"></div>
+        <button id="startZiel" style="display:block; margin:10px auto;">Start Ziel!</button>
+        <p id="scoreZiel" style="text-align:center; font-size:18px; color:#ffcc00;">Score: 0</p>`;
+      insertHighscore('zielHS');
+
+      const zb = document.getElementById('zielBox');
+      const bz = document.getElementById('startZiel');
+      const sc = document.getElementById('scoreZiel');
+      let score=0, count=0, t;
+
+      bz.onclick = ()=>{
+        zb.innerHTML=''; score=0; count=0;
+        sc.textContent = 'Score: 0';
+        bz.style.display='none';
+        run();
+      };
+      function run(){
+        if(count>=10) return endZ();
+        const tbox = document.createElement('div');
+        tbox.style = "width:30px;height:30px;background:yellow;border-radius:50%;position:absolute;";
+        const x = Math.random()*270, y = Math.random()*270;
+        tbox.style.left=x+'px'; tbox.style.top=y+'px';
+        zb.appendChild(tbox);
+        tbox.onclick = ()=>{
+          zb.removeChild(tbox);
+          score++;
+          count++;
+          sc.textContent = 'Score: '+score;
+          run();
+        };
+        t = setTimeout(()=>{
+          zb.removeChild(tbox);
+          count++;
+          run();
+        },1000);
+      }
+      function endZ(){
+        clearTimeout(t);
+        const name=prompt("Name?")||"---";
+        const arr=JSON.parse(localStorage.getItem('zielHS'))||[];
+        arr.push({name,score});
+        arr.sort((a,b)=>b.score-a.score);
+        localStorage.setItem('zielHS',JSON.stringify(arr.slice(0,10)));
+        area.innerHTML = `<p>✔️ Du hast ${score} Treffer!</p>`;
+        insertHighscore('zielHS');
+      }
+    }
+
+    else if (sel === "bonus") {
+      area.innerHTML = `
+        <p><em>🔒 Rätsel:</em> Was hat einen Hals, aber keinen Kopf?</p>
+        <button id="check">Antwort eingeben</button>`;
+      document.getElementById('check').onclick = () => {
+        const a = prompt("Antwort?").trim().toLowerCase();
+        if (a === 'flasche') {
+          area.innerHTML = `
+            <p style="color:#0f0; font-weight:bold;">
+              Du bist ein richtiger Rätselprofi! Viel Spaß beim Spielen!
+            </p>
+          `;
+          insertHighscore('jumpHS');
+          area.innerHTML += `
+            <div id="jumpBox" style="width:300px;height:300px;background:#101525;margin:auto; border:2px solid #00e6ff; position:relative; overflow:hidden;">
+              <div id="player" style="width:20px;height:20px;background:#0f0;position:absolute;bottom:0;left:140px;"></div>
+            </div>
+            <button id="startJump" style="display:block;margin:10px auto;">Start Jump & Glide</button>
+          `;
+          let jump, glide, score=0, gameT;
+          const pb = document.getElementById('player');
+          document.getElementById('startJump').onclick = ()=>{
+            jump = false; glide=false; score=0;
+            const js = () => {
+              const x = Math.random()*280;
+              const o = document.createElement('div');
+              o.style="width:20px;height:20px;background:#f00;position:absolute;top:0;left:"+x+"px;";
+              document.getElementById('jumpBox').appendChild(o);
+              let t = setInterval(()=>{
+                const top = parseFloat(o.style.top);
+                if(!jump) o.style.top = top+4+'px';
+                else o.style.top = top-4+'px';
+                if(top>280) { clearInterval(t); o.remove(); score--; }
+                if(top<0){ clearInterval(t); o.remove(); score++; }
+                pb.style.bottom = jump ? '20px' : '0';
+                jump=false;
+                if(score>9) endJump();
+              },50);
+            };
+            gameT = setInterval(js,800);
+            document.addEventListener('keydown', e => {
+              if(e.key===' '|| e.key==='ArrowUp') jump=true;
+            });
+          };
+          function endJump(){
+            clearInterval(gameT);
+            const name = prompt("Name?")||"---";
+            const arr = JSON.parse(localStorage.getItem('jumpHS'))||[];
+            arr.push({name,score});
+            arr.sort((a,b)=>b.score-a.score);
+            localStorage.setItem('jumpHS',JSON.stringify(arr.slice(0,10)));
+            area.innerHTML += `<p>✔️ Jump & Glide beendet! Score: ${score}</p>`;
+            insertHighscore('jumpHS');
+          }
+        } else alert("Falsch, versuch's noch mal!");
+      };
+    }
+  });
+});
+</script>
 
   <section id="videos">
     <h2>📺 Videos & Highlights</h2>
