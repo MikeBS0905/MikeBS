@@ -245,6 +245,70 @@
     border-radius: 8px;
     box-shadow: 0 0 10px #00e6ff88;
   }
+  
+  /* 🍩 Secret Donut */
+#secretDonut {
+  position: fixed;
+  width: 35px; height: 35px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.3s;
+}
+#secretDonut:hover {
+  transform: scale(1.5);
+}
+
+/* ✨ Glitzer */
+#glitterCanvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* 🔒 Rätsel-Popup */
+#riddleModal {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  background: #0a0f1a;
+  border: 3px solid #00e6ff;
+  border-radius: 12px;
+  box-shadow: 0 0 20px #00e6ff88;
+  padding: 30px;
+  text-align: center;
+  z-index: 10000;
+  display: none;
+  width: 280px;
+}
+#riddleModal input {
+  margin-top: 20px;
+  padding: 8px;
+  width: 80%;
+  border-radius: 6px;
+  border: 2px solid #00e6ff;
+  background: #101525;
+  color: #eaf6ff;
+  font-size: 16px;
+  text-align: center;
+}
+
+/* 🪂 Jump & Glide Container */
+#jumpGlideContainer {
+  display: none;
+  width: 100%;
+  height: 400px;
+  background: #111;
+  position: relative;
+  overflow: hidden;
+  margin-top: 40px;
+}
+canvas#jgCanvas {
+  background: #222;
+  display: block;
+  margin: 0 auto;
+}
+
 </style>
 </head>
 <body>
@@ -386,6 +450,48 @@
 
 <!-- Scroll to Top Button -->
 <button id="scrollTopBtn" title="Nach oben scrollen">⬆️</button>
+
+<!-- 🍩 Secret Donut -->
+<div id="secretDonut">🍩</div>
+
+<!-- ✨ Glitzer-Canvas -->
+<canvas id="glitterCanvas"></canvas>
+
+<!-- 🔒 Rätsel-Popup -->
+<div id="riddleModal">
+  <div style="font-size:20px; margin-bottom:10px;">🔒 Rätsel</div>
+  <div>„Ich habe einen Hals, aber keinen Kopf. Was bin ich?“</div>
+  <input id="riddleAnswer" placeholder="Antwort hier…" />
+</div>
+
+<!-- 🎮 Jump & Glide Spiel -->
+<div id="jumpGlideContainer">
+  <canvas id="jgCanvas" width="600" height="400"></canvas>
+</div>
+
+
+<!-- 🍩 Versteckter Donut -->
+<div id="secretDonut">🍩</div>
+
+<!-- ✨ Glitzerregen -->
+<canvas id="glitterCanvas"></canvas>
+
+<!-- 🔒 Rätsel-Fenster -->
+<div id="riddleModal">
+  <div style="font-size: 20px; margin-bottom: 10px;">🔒 Rätsel</div>
+  <div>„Ich habe einen Hals, aber keinen Kopf. Was bin ich?“</div>
+  <input id="riddleAnswer" placeholder="Antwort hier…">
+</div>
+
+<!-- 🪂 Jump & Glide Spiel -->
+<section id="jumpGameSection">
+  <div id="jumpGlideContainer">
+    <canvas id="jgCanvas" width="600" height="400"></canvas>
+  </div>
+</section>
+
+
+
 
 <footer>
   &copy; 2025 MikeBS. Powered by Mama ♥️.
@@ -565,6 +671,233 @@ food = generateFood();
 
     updateHighscoreBoard();
   });
+  
+  
+</script>
+
+
+
+<script>
+  // Elemente
+  const donut = document.getElementById('secretDonut');
+  const canvasG = document.getElementById('glitterCanvas');
+  const ctxG = canvasG.getContext('2d');
+  const modal = document.getElementById('riddleModal');
+  const input = document.getElementById('riddleAnswer');
+  const gameSection = document.getElementById('jumpGameSection');
+  const gameBox = document.getElementById('jumpGlideContainer');
+  const canvasJ = document.getElementById('jgCanvas');
+  const ctxJ = canvasJ.getContext('2d');
+
+  // Donut zufällig positionieren
+  function placeDonut() {
+    const maxX = window.innerWidth - 50;
+    const maxY = window.innerHeight - 50;
+    donut.style.left = (Math.random() * maxX) + 'px';
+    donut.style.top = (Math.random() * maxY) + 'px';
+  }
+  window.addEventListener('resize', placeDonut);
+  placeDonut();
+
+  // Canvas Größe anpassen
+  function resizeGlitter() {
+    canvasG.width = window.innerWidth;
+    canvasG.height = window.innerHeight;
+  }
+  window.addEventListener('resize', resizeGlitter);
+  resizeGlitter();
+
+  // Glitzerpartikel
+  let glitterActive = false;
+  let particles = [];
+
+  function createParticles() {
+    particles = [];
+    for(let i = 0; i < 200; i++) {
+      particles.push({
+        x: Math.random() * canvasG.width,
+        y: Math.random() * -canvasG.height,
+        vx: (Math.random() - 0.5) * 2,
+        vy: Math.random() * 4 + 2,
+        size: Math.random() * 3 + 2,
+        col: `hsl(${Math.random() * 360}, 100%, 75%)`
+      });
+    }
+  }
+
+  function drawParticles() {
+    if (!glitterActive) return;
+    ctxG.clearRect(0, 0, canvasG.width, canvasG.height);
+    particles.forEach(p => {
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.y > canvasG.height) {
+        p.y = -10;
+        p.x = Math.random() * canvasG.width;
+      }
+      ctxG.fillStyle = p.col;
+      ctxG.beginPath();
+      ctxG.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctxG.fill();
+    });
+    requestAnimationFrame(drawParticles);
+  }
+
+  function startGlitter() {
+    glitterActive = true;
+    createParticles();
+    drawParticles();
+  }
+
+  function stopGlitter() {
+    glitterActive = false;
+    ctxG.clearRect(0, 0, canvasG.width, canvasG.height);
+  }
+
+  // Donut Klick: Glitzer starten und Rätsel anzeigen
+  donut.addEventListener('click', () => {
+    startGlitter();
+    setTimeout(stopGlitter, 4000);
+    modal.style.display = 'block';
+    input.value = '';
+    input.focus();
+  });
+
+  // Rätsel Antwort prüfen
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') {
+      if (input.value.trim().toLowerCase() === 'flasche') {
+        modal.style.display = 'none';
+        openGame();
+      } else {
+        alert('Falsch – versuch’s nochmal!');
+        input.value = '';
+      }
+    }
+  });
+
+  // --- Jump & Glide Spiel ---
+
+  let player = { x: 50, y: 350, vy: 0 };
+  const gravity = 0.6;
+  const jumpStrength = -12;
+  let obstacles = [];
+  let gameRunning = false;
+
+  function initGame() {
+    obstacles = [];
+    for(let i=0; i<5; i++){
+      obstacles.push({
+        x: 700 + i * 300,
+        y: 340,
+        w: 50,
+        h: 40,
+      });
+    }
+    player = { x: 50, y: 350, vy: 0 };
+    gameRunning = true;
+  }
+
+  function drawGame() {
+    if(!gameRunning) return;
+
+    // Hintergrund
+    ctxJ.fillStyle = '#111';
+    ctxJ.fillRect(0, 0, canvasJ.width, canvasJ.height);
+
+    // Spieler-Physik
+    player.vy += gravity;
+    player.y += player.vy;
+    if(player.y > 350) {
+      player.y = 350;
+      player.vy = 0;
+    }
+
+    // Spieler zeichnen (grünes Quadrat)
+    ctxJ.fillStyle = '#0f0';
+    ctxJ.fillRect(player.x, player.y - 40, 40, 40);
+
+    // Hindernisse bewegen und zeichnen
+    ctxJ.fillStyle = '#f00';
+    obstacles.forEach(obs => {
+      obs.x -= 6;
+      if (obs.x + obs.w < 0) {
+        obs.x = canvasJ.width + Math.random() * 500;
+      }
+      ctxJ.fillRect(obs.x, obs.y, obs.w, obs.h);
+
+      // Kollision prüfen
+      if (
+        player.x < obs.x + obs.w &&
+        player.x + 40 > obs.x &&
+        player.y - 40 < obs.y + obs.h &&
+        player.y > obs.y
+      ) {
+        endGame();
+      }
+    });
+
+    if(gameRunning){
+      requestAnimationFrame(drawGame);
+    }
+  }
+
+  function jump() {
+    if(player.y >= 350){
+      player.vy = jumpStrength;
+    }
+  }
+
+  function openGame() {
+    gameSection.scrollIntoView({ behavior: 'smooth' });
+    gameBox.style.display = 'block';
+    initGame();
+    drawGame();
+  }
+
+  function endGame() {
+    gameRunning = false;
+    setTimeout(() => {
+      const name = prompt("Game Over! Gib deinen Namen für die Bestenliste ein:");
+      if(name){
+        saveHighscore(name.trim(), score);
+      }
+      location.reload();
+    }, 200);
+  }
+
+  // Highscore (localStorage)
+  const scoreKey = 'jumpGlideHighscores';
+  let score = 0;
+
+  function saveHighscore(name, score) {
+    const scores = JSON.parse(localStorage.getItem(scoreKey)) || [];
+    scores.push({ name: name.substring(0, 12), score });
+    scores.sort((a, b) => b.score - a.score);
+    const top10 = scores.slice(0, 10);
+    localStorage.setItem(scoreKey, JSON.stringify(top10));
+    alert("Highscore gespeichert!");
+  }
+
+  // Steuerung: Tastatur & Touch für Handy
+  window.addEventListener('keydown', e => {
+    if(e.code === 'Space' || e.key === 'ArrowUp'){
+      jump();
+    }
+  });
+
+  // Touchsteuerung
+  let touchStartY = null;
+  window.addEventListener('touchstart', e => {
+    touchStartY = e.touches[0].clientY;
+  }, {passive: true});
+
+  window.addEventListener('touchend', e => {
+    const touchEndY = e.changedTouches[0].clientY;
+    if(touchStartY - touchEndY > 50){ // Swipe nach oben
+      jump();
+    }
+  }, {passive: true});
 </script>
 
 </body>
