@@ -444,9 +444,9 @@
       snake = [{ x: 5 * box, y: 5 * box }];
       direction = "RIGHT";
       food = {
-        x: Math.floor(Math.random() * 20) * box,
-        y: Math.floor(Math.random() * 20) * box
-      };
+  x: Math.floor(Math.random() * (canvas.width / box)) * box,
+  y: Math.floor(Math.random() * (canvas.height / box)) * box
+};
       score = 0;
     }
 
@@ -483,10 +483,10 @@
 
       if (head.x === food.x && head.y === food.y) {
         score++;
-        food = {
-          x: Math.floor(Math.random() * 20) * box,
-          y: Math.floor(Math.random() * 20) * box
-        };
+    food = {
+  x: Math.floor(Math.random() * (canvas.width / box)) * box,
+  y: Math.floor(Math.random() * (canvas.height / box)) * box
+};
       } else {
         snake.pop();
       }
