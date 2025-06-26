@@ -642,15 +642,15 @@ food = generateFood();
         gameActive = false;
         setTimeout(() => askForHighscore(score), 100);
       }
+snake.unshift(head);
 
-    if (head.x === food.x && head.y === food.y) {
+if (head.x === food.x && head.y === food.y) {
   score++;
   food = generateFood();
-  snake.unshift(head); // wachsen lassen
 } else {
-  snake.unshift(head);
-  snake.pop(); // normal weiterfahren
+  snake.pop();
 }
+
     }
 
     document.addEventListener("keydown", (e) => {
