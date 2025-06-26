@@ -330,8 +330,10 @@ canvas#jgCanvas {
   display: block;
   margin: 0 auto;
 }
-
-<div id="jgHighscoreBoard" style="
+#jumpHighscoreBoard {
+  display: none;
+}
+<div id="jumpHighscoreBoard" style="
   display:none;
   margin: 40px auto;
   max-width: 500px;
@@ -782,15 +784,16 @@ canvas#jgCanvas {
   const ctxJ = canvasJ.getContext('2d');
 
   // Donut zufällig positionieren
-  function placeDonut() {
-    const donutSize = 35;
-const padding = 10;
-const maxX = window.innerWidth - donutSize - padding;
-const maxY = window.innerHeight - donutSize - padding;
-donut.style.left = (Math.random() * (maxX - padding) + padding) + 'px';
-donut.style.top = (Math.random() * (maxY - padding) + padding) + 'px';
+ function placeDonut() {
+  const donutSize = 35;
+  const padding = 10;
+  const maxX = window.innerWidth - donutSize - padding;
+  const maxY = window.innerHeight - donutSize - padding;
+  donut.style.left = (Math.random() * (maxX)) + 'px';
+  donut.style.top = (Math.random() * (maxY)) + 'px';
+}
     
-  }
+  
   setInterval(placeDonut, 4000);
   
   window.addEventListener('resize', placeDonut);
