@@ -757,7 +757,7 @@ food = generateFood();
   // Donut Klick: Glitzer starten und Rätsel anzeigen
   donut.addEventListener('click', () => {
     startGlitter();
-    setTimeout(stopGlitter, 4000);
+
     modal.style.display = 'block';
     input.value = '';
     input.focus();
@@ -769,6 +769,7 @@ food = generateFood();
       if (input.value.trim().toLowerCase() === 'flasche') {
         modal.style.display = 'none';
         openGame();
+        stopGlitter();
       } else {
         alert('Falsch – versuch’s nochmal!');
         input.value = '';
