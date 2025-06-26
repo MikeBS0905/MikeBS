@@ -859,6 +859,10 @@ function updateJGHighscore(scores = null) {
 
   // --- Jump & Glide Spiel ---
 
+if (antwortIstRichtig) {
+  document.getElementById('jumpGlideStarter').style.display = 'block';
+}
+
   let player = { x: 50, y: 350, vy: 0 };
   const gravity = 0.6;
   const jumpStrength = -12;
@@ -866,10 +870,12 @@ function updateJGHighscore(scores = null) {
   let gameRunning = false;
   
   const gameBox = document.getElementById('jumpGlideContainer');
+  let score = 0;
 const canvasJ = document.getElementById('jgCanvas');
 const gameSection = document.getElementById('jumpGameSection');
 const highscoreList = document.getElementById('jumpHighscoreList');
 const startBtn = document.getElementById('startJumpGameBtn');
+const ctxJ = canvasJ.getContext('2d');
 
   function initGame() {
     obstacles = [];
