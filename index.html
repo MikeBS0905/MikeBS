@@ -763,7 +763,10 @@ canvas#jgCanvas {
     const maxY = window.innerHeight - 50;
     donut.style.left = (Math.random() * maxX) + 'px';
     donut.style.top = (Math.random() * maxY) + 'px';
+    
   }
+  setInterval(placeDonut, 4000);
+  
   window.addEventListener('resize', placeDonut);
   placeDonut();
 
@@ -831,25 +834,24 @@ canvas#jgCanvas {
     input.focus();
   });
 
-  // Rätsel Antwort prüfen
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') {
-      if (input.value.trim().toLowerCase() === 'flasche') {
-        modal.style.display = 'none';
-        openGame();
-        stopGlitter();
-      } else {
-        alert('Falsch – versuch’s nochmal!');
-        input.value = '';
-      }
+ // Rätsel Antwort prüfen - Eventlistener
+input.addEventListener('keydown', e => {
+  if (e.key === 'Enter') {
+    if (input.value.trim().toLowerCase() === 'flasche') {
+      modal.style.display = 'none';
+      stopGlitter();
+      // Starte das Spiel nicht sofort, sondern zeige den Start-Button
+      document.getElementById('startJumpGameBtn').style.display = 'block';
+    } else {
+      alert('Falsch – versuch’s nochmal!');
+      input.value = '';
     }
-  });
+  }
+});
 
   // --- Jump & Glide Spiel ---
 
-if (antwortIstRichtig) {
-  document.getElementById('jumpGlideStarter').style.display = 'block';
-}
+
 
   let player = { x: 50, y: 350, vy: 0 };
   const gravity = 0.6;
@@ -949,7 +951,7 @@ const ctxJ = canvasJ.getContext('2d');
 
   // Highscore (localStorage)
   const scoreKey = 'jumpGlideHighscores';
-  let score = 0;
+  
 
   function saveHighscore(name, score) {
     const scores = JSON.parse(localStorage.getItem(scoreKey)) || [];
