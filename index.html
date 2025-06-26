@@ -604,8 +604,8 @@ canvas#jgCanvas {
   let newFood;
   do {
     newFood = {
-      x: Math.floor(Math.random() * (canvas.width / box - 1)) * box,
-      y: Math.floor(Math.random() * (canvas.height / box - 1)) * box
+      x: Math.floor(Math.random() * (canvas.width / box )) * box,
+      y: Math.floor(Math.random() * (canvas.height / box )) * box
     };
   } while (snake.some(seg => seg.x === newFood.x && seg.y === newFood.y));
   return newFood;
