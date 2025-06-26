@@ -783,10 +783,12 @@ canvas#jgCanvas {
 
   // Donut zufällig positionieren
   function placeDonut() {
-    const maxX = window.innerWidth - 50;
-    const maxY = window.innerHeight - 50;
-    donut.style.left = (Math.random() * maxX) + 'px';
-    donut.style.top = (Math.random() * maxY) + 'px';
+    const donutSize = 35;
+const padding = 10;
+const maxX = window.innerWidth - donutSize - padding;
+const maxY = window.innerHeight - donutSize - padding;
+donut.style.left = (Math.random() * (maxX - padding) + padding) + 'px';
+donut.style.top = (Math.random() * (maxY - padding) + padding) + 'px';
     
   }
   setInterval(placeDonut, 4000);
@@ -958,6 +960,7 @@ const ctxJ = canvasJ.getContext('2d');
   function openGame() {
     gameSection.scrollIntoView({ behavior: 'smooth' });
     gameBox.style.display = 'block';
+    document.getElementById('jumpHighscoreBoard').style.display = 'block';
     initGame();
     drawGame();
   }
