@@ -492,7 +492,7 @@ canvas#jgCanvas {
   </p>
 </section>
 
-
+<div id="secretDonut">🍩</div>
 
 <!-- ✨ Glitzer-Canvas -->
 <canvas id="glitterCanvas" style="position: fixed; inset: 0; pointer-events: none; z-index: 9999;"></canvas>
@@ -773,97 +773,92 @@ canvas#jgCanvas {
 
 
 
-<script>
-  // Elemente
-  const donut = document.getElementById('secretDonut');
-  const canvasG = document.getElementById('glitterCanvas');
-  const ctxG = canvasG.getContext('2d');
-  const modal = document.getElementById('riddleModal');
-  const input = document.getElementById('riddleAnswer');
-  const gameSection = document.getElementById('jumpGameSection');
-  const gameBox = document.getElementById('jumpGlideContainer');
-  const canvasJ = document.getElementById('jgCanvas');
-  const ctxJ = canvasJ.getContext('2d');
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      // Elemente holen
+      const donut = document.getElementById('secretDonut');
+      const canvasG = document.getElementById('glitterCanvas');
+      const ctxG = canvasG.getContext('2d');
+      const modal = document.getElementById('riddleModal');
+      const input = document.getElementById('riddleAnswer');
 
-  // Donut zufällig positionieren
- function placeDonut() {
-  const donutSize = 35;
-  const padding = 10;
-  const maxX = window.innerWidth - donutSize - padding;
-  const maxY = window.innerHeight - donutSize - padding;
-  donut.style.left = (Math.random() * (maxX)) + 'px';
-  donut.style.top = (Math.random() * (maxY)) + 'px';
-}
-    
-  
-  setInterval(placeDonut, 4000);
-  
-  window.addEventListener('resize', placeDonut);
-  placeDonut();
-
-  // Canvas Größe anpassen
-  function resizeGlitter() {
-    canvasG.width = window.innerWidth;
-    canvasG.height = window.innerHeight;
-  }
-  window.addEventListener('resize', resizeGlitter);
-  resizeGlitter();
-
-  // Glitzerpartikel
-  let glitterActive = false;
-  let particles = [];
-
-  function createParticles() {
-    particles = [];
-    for(let i = 0; i < 200; i++) {
-      particles.push({
-        x: Math.random() * canvasG.width,
-        y: Math.random() * -canvasG.height,
-        vx: (Math.random() - 0.5) * 2,
-        vy: Math.random() * 4 + 2,
-        size: Math.random() * 3 + 2,
-        col: `hsl(${Math.random() * 360}, 100%, 75%)`
-      });
-    }
-  }
-
-  function drawParticles() {
-    if (!glitterActive) return;
-    ctxG.clearRect(0, 0, canvasG.width, canvasG.height);
-    particles.forEach(p => {
-      p.x += p.vx;
-      p.y += p.vy;
-      if (p.y > canvasG.height) {
-        p.y = -10;
-        p.x = Math.random() * canvasG.width;
+      // Canvas-Größe anpassen
+      function resizeGlitter() {
+        canvasG.width = window.innerWidth;
+        canvasG.height = window.innerHeight;
       }
-      ctxG.fillStyle = p.col;
-      ctxG.beginPath();
-      ctxG.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-      ctxG.fill();
+      window.addEventListener('resize', resizeGlitter);
+      resizeGlitter();
+
+      // Donut platzieren
+      function placeDonut() {
+        const donutSize = 35;
+        const padding = 10;
+        const maxX = window.innerWidth - donutSize - padding;
+        const maxY = window.innerHeight - donutSize - padding;
+        donut.style.left = (Math.random() * maxX) + 'px';
+        donut.style.top = (Math.random() * maxY) + 'px';
+      }
+      setInterval(placeDonut, 4000);
+      window.addEventListener('resize', placeDonut);
+      placeDonut();
+
+      // Glitzerpartikel
+      let glitterActive = false;
+      let particles = [];
+
+      function createParticles() {
+        particles = [];
+        for (let i = 0; i < 200; i++) {
+          particles.push({
+            x: Math.random() * canvasG.width,
+            y: Math.random() * -canvasG.height,
+            vx: (Math.random() - 0.5) * 2,
+            vy: Math.random() * 4 + 2,
+            size: Math.random() * 3 + 2,
+            col: `hsl(${Math.random() * 360}, 100%, 75%)`
+          });
+        }
+      }
+
+      function drawParticles() {
+        if (!glitterActive) return;
+        ctxG.clearRect(0, 0, canvasG.width, canvasG.height);
+        particles.forEach(p => {
+          p.x += p.vx;
+          p.y += p.vy;
+          if (p.y > canvasG.height) {
+            p.y = -10;
+            p.x = Math.random() * canvasG.width;
+          }
+          ctxG.fillStyle = p.col;
+          ctxG.beginPath();
+          ctxG.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctxG.fill();
+        });
+        requestAnimationFrame(drawParticles);
+      }
+
+      function startGlitter() {
+        glitterActive = true;
+        createParticles();
+        drawParticles();
+      }
+
+      function stopGlitter() {
+        glitterActive = false;
+        ctxG.clearRect(0, 0, canvasG.width, canvasG.height);
+      }
+
+      // Donut-Klick
+      donut.addEventListener('click', () => {
+        startGlitter();
+        modal.style.display = 'block';
+        input.value = '';
+        input.focus();
+      });
     });
-    requestAnimationFrame(drawParticles);
-  }
-
-  function startGlitter() {
-    glitterActive = true;
-    createParticles();
-    drawParticles();
-  }
-
-  function stopGlitter() {
-    glitterActive = false;
-    ctxG.clearRect(0, 0, canvasG.width, canvasG.height);
-  }
-
-  // Donut Klick: Glitzer starten und Rätsel anzeigen
-  donut.addEventListener('click', () => {
-    startGlitter();
-
-    modal.style.display = 'block';
-    input.value = '';
-    input.focus();
-  });
+  
 
  // Rätsel Antwort prüfen - Eventlistener
 input.addEventListener('keydown', e => {
