@@ -247,6 +247,30 @@
     border-radius: 8px;
     box-shadow: 0 0 10px #00e6ff88;
   }
+  
+  #gameArea div > h4 {
+  font-family: 'Press Start 2P', cursive;
+  color: #00e6ff;
+  text-align: center;
+  margin-bottom: 15px;
+  font-size: 18px;
+  text-shadow: 2px 2px #003344;
+}
+
+#gameArea ol {
+  background: #101525;
+  border: 3px solid #00e6ff;
+  border-radius: 10px;
+  padding: 15px 25px;
+  box-shadow: 0 0 20px #00e6ff88;
+  max-width: 320px;
+  margin: 0 auto 30px auto;
+  font-family: 'Quicksand', sans-serif;
+  color: #eaf6ff;
+  font-weight: 600;
+  font-size: 14px;
+  list-style-position: inside;
+}
 </style>
 </head>
 <body>
@@ -339,9 +363,26 @@
       🎯 <strong>Fortnite</strong> – Editiert schneller als sein Schatten<br />
       ⚡ <strong>Pokémon</strong> – 2x Shiny? Kein Zufall, nur Können.
     </p>
+<h3 style="font-family: 'Press Start 2P', cursive; color: #00e6ff; text-align: center; margin-bottom: 10px; font-size: 20px; text-shadow: 1px 1px #003344;">
+  Zeig was du kannst!
+</h3>
 
   <div style="text-align:center; margin-bottom:20px;">
-    <select id="gameSelector" style="font-size:16px; padding:8px; border-radius:8px;">
+    <select id="gameSelector" 
+        style="font-family: 'Press Start 2P', cursive; 
+               font-size: 18px; 
+               padding: 12px 20px; 
+               border-radius: 12px; 
+               border: 3px solid #00e6ff; 
+               background: #101525; 
+               color: #00e6ff; 
+               box-shadow: 0 0 15px #00e6ff88; 
+               cursor: pointer;
+               width: 100%;
+               max-width: 320px;
+               margin: 0 auto 30px auto;
+               display: block;">
+
       <option value="">– Wähle ein Spiel –</option>
       <option value="snake">🐍 Snake</option>
       <option value="pixel">🟪 Pixelklicker</option>
@@ -529,17 +570,41 @@ document.addEventListener("DOMContentLoaded", () => {
         const a = prompt("Antwort?").trim().toLowerCase();
         if (a === 'flasche') {
           area.innerHTML = `
-            <p style="color:#0f0; font-weight:bold;">
-              Du bist ein richtiger Rätselprofi! Viel Spaß beim Spielen!
-            </p>
-          `;
-          insertHighscore('jumpHS');
-          area.innerHTML += `
-            <div id="jumpBox" style="width:300px;height:300px;background:#101525;margin:auto; border:2px solid #00e6ff; position:relative; overflow:hidden;">
-              <div id="player" style="width:20px;height:20px;background:#0f0;position:absolute;bottom:0;left:140px;"></div>
-            </div>
-            <button id="startJump" style="display:block;margin:10px auto;">Start Jump & Glide</button>
-          `;
+          <div id="jumpBox" 
+     style="width:300px; 
+            height:300px; 
+            background:#101525; 
+            margin:auto; 
+            border:3px solid #00e6ff; 
+            border-radius:12px; 
+            box-shadow: 0 0 20px #00e6ff88; 
+            position:relative; 
+            overflow:hidden;">
+  <div id="player" 
+       style="width:20px; 
+              height:20px; 
+              background:#0f0; 
+              position:absolute; 
+              bottom:0; 
+              left:140px; 
+              border-radius:4px; 
+              box-shadow: 0 0 10px #0f0;"></div>
+</div>
+<button id="startJump" 
+        style="display:block; 
+               margin:15px auto; 
+               padding:10px 20px; 
+               font-family: 'Press Start 2P', cursive; 
+               font-size:16px; 
+               background:#00e6ff; 
+               border:none; 
+               border-radius:12px; 
+               color:#001133; 
+               cursor:pointer; 
+               box-shadow: 0 0 15px #00e6ffcc;">
+  Start Jump & Glide
+  `;
+</button>
           let jump, glide, score=0, gameT;
           const pb = document.getElementById('player');
           document.getElementById('startJump').onclick = ()=>{
@@ -776,6 +841,36 @@ document.addEventListener("DOMContentLoaded", () => {
 
     updateHighscoreBoard();
   });
+</script>
+<script>
+const c = document.getElementById("c_snake");
+
+c.addEventListener("touchstart", (e) => {
+  if (!active) return;
+  touchStartX = e.touches[0].clientX;
+  touchStartY = e.touches[0].clientY;
+}, { passive: false });
+
+c.addEventListener("touchmove", (e) => {
+  if (!active) return;
+  e.preventDefault();
+
+  if (touchStartX === null || touchStartY === null) return;
+
+  const dx = e.touches[0].clientX - touchStartX;
+  const dy = e.touches[0].clientY - touchStartY;
+
+  if (Math.abs(dx) > Math.abs(dy)) {
+    if (dx > 0 && dir !== "LEFT") dir = "RIGHT";
+    else if (dx < 0 && dir !== "RIGHT") dir = "LEFT";
+  } else {
+    if (dy > 0 && dir !== "UP") dir = "DOWN";
+    else if (dy < 0 && dir !== "DOWN") dir = "UP";
+  }
+
+  touchStartX = null;
+  touchStartY = null;
+}, { passive: false });
 </script>
 
 </body>
