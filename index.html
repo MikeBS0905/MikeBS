@@ -249,12 +249,17 @@
   /* 🍩 Secret Donut */
 #secretDonut {
   position: fixed;
-  width: 35px; height: 35px;
+  width: 35px;
+  height: 35px;
   cursor: pointer;
   z-index: 1000;
   transition: transform 0.3s;
-  top: 0;
+  top: 0; /* initial */
   left: 0;
+  text-align: center;
+  font-size: 28px;          /* besser sichtbar */
+  line-height: 35px;        /* vertikal zentriert */
+  user-select: none;
 }
 #secretDonut:hover {
   transform: scale(1.5);
@@ -487,10 +492,7 @@ canvas#jgCanvas {
   </p>
 </section>
 
-<!-- 🍩 Secret Donut -->
-<div id="secretDonut" style="position: fixed; width: 35px; height: 35px; cursor: pointer; z-index: 1000; transition: transform 0.3s;">
-  🍩
-</div>
+
 
 <!-- ✨ Glitzer-Canvas -->
 <canvas id="glitterCanvas" style="position: fixed; inset: 0; pointer-events: none; z-index: 9999;"></canvas>
