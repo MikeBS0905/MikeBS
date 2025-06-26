@@ -294,6 +294,26 @@
 }
 
 /* 🪂 Jump & Glide Container */
+
+<!-- Spiel-Start Button -->
+<div id="jumpGlideStarter" style="text-align:center; margin-top:60px;">
+  <button id="startJumpGlideBtn" style="
+    font-size: 20px;
+    padding: 16px 30px;
+    background: #00e6ff;
+    color: #001133;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 0 12px #00e6ffaa;
+  ">🪂 Spiel starten!</button>
+</div>
+
+<!-- Jump & Glide Spiel -->
+<div id="jumpGlideContainer">
+  <canvas id="jgCanvas" width="600" height="400"></canvas>
+</div>
+
 #jumpGlideContainer {
   display: none;
   width: 100%;
@@ -308,6 +328,22 @@ canvas#jgCanvas {
   display: block;
   margin: 0 auto;
 }
+
+<div id="jgHighscoreBoard" style="
+  display:none;
+  margin: 40px auto;
+  max-width: 500px;
+  background: #101525;
+  border: 3px solid #00e6ff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 0 20px #00e6ff88;
+  color: #eaf6ff;
+  text-align: center;
+">
+  <h3 style="font-family: 'Press Start 2P', cursive; color:#00e6ff;">🏆 Jump & Glide Highscores</h3>
+  <ol id="jgHighscoreList" style="font-family:'Quicksand', sans-serif; font-size:16px;"></ol>
+</div>
 
 </style>
 </head>
@@ -672,7 +708,35 @@ food = generateFood();
     updateHighscoreBoard();
   });
   
-  
+  document.getElementById("startJumpGlideBtn").addEventListener("click", () => {
+  document.getElementById("jumpGlideStarter").style.display = "none";
+  openGame(); // Startet das Spiel
+});
+
+function askForJGHighscore(score) {
+  const name = prompt("Game Over! Wie heißt du?");
+  if (!name) return;
+
+  const entry = { name: name.substring(0, 12), score };
+  const scores = JSON.parse(localStorage.getItem("jgHighscores")) || [];
+  scores.push(entry);
+  scores.sort((a, b) => b.score - a.score);
+  const top10 = scores.slice(0, 10);
+  localStorage.setItem("jgHighscores", JSON.stringify(top10));
+  updateJGHighscore(top10);
+  document.getElementById("jgHighscoreBoard").style.display = "block";
+}
+
+function updateJGHighscore(scores = null) {
+  const list = document.getElementById("jgHighscoreList");
+  const highscores = scores || JSON.parse(localStorage.getItem("jgHighscores")) || [];
+  list.innerHTML = "";
+  highscores.forEach((entry, i) => {
+    const li = document.createElement("li");
+    li.textContent = `${i + 1}. ${entry.name} – ${entry.score} Punkte`;
+    list.appendChild(li);
+  });
+}
 </script>
 
 
