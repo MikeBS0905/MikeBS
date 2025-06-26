@@ -778,24 +778,17 @@ canvas#jgCanvas {
 
 
 
-  <script>
+ <script>
     document.addEventListener('DOMContentLoaded', () => {
-      // Elemente holen
       const donut = document.getElementById('secretDonut');
       const canvasG = document.getElementById('glitterCanvas');
       const ctxG = canvasG.getContext('2d');
       const modal = document.getElementById('riddleModal');
       const input = document.getElementById('riddleAnswer');
+      const confirmBtn = document.getElementById('confirmRiddleBtn');
+      const startBtn = document.getElementById('startJumpGameBtn');
 
-      // Canvas-Größe anpassen
-      function resizeGlitter() {
-        canvasG.width = window.innerWidth;
-        canvasG.height = window.innerHeight;
-      }
-      window.addEventListener('resize', resizeGlitter);
-      resizeGlitter();
-
-      // Donut platzieren
+      // 🍩 Donut zufällig platzieren
       function placeDonut() {
         const donutSize = 35;
         const padding = 10;
@@ -804,13 +797,21 @@ canvas#jgCanvas {
         donut.style.left = (Math.random() * maxX) + 'px';
         donut.style.top = (Math.random() * maxY) + 'px';
       }
+
+      placeDonut();
       setInterval(placeDonut, 4000);
       window.addEventListener('resize', placeDonut);
-      placeDonut();
 
-      // Glitzerpartikel
+      // ✨ Glitzer
       let glitterActive = false;
       let particles = [];
+
+      function resizeGlitter() {
+        canvasG.width = window.innerWidth;
+        canvasG.height = window.innerHeight;
+      }
+      resizeGlitter();
+      window.addEventListener('resize', resizeGlitter);
 
       function createParticles() {
         particles = [];
@@ -855,41 +856,41 @@ canvas#jgCanvas {
         ctxG.clearRect(0, 0, canvasG.width, canvasG.height);
       }
 
-      // Donut-Klick
+      // 🍩 Donut klick
       donut.addEventListener('click', () => {
         startGlitter();
         modal.style.display = 'block';
         input.value = '';
         input.focus();
       });
+
+      // Eingabe mit Enter
+      input.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.keyCode === 13) {
+          e.preventDefault();
+          checkRiddleAnswer();
+        }
+      });
+
+      // Eingabe mit Button
+      confirmBtn.addEventListener('click', () => {
+        checkRiddleAnswer();
+      });
+
+      function checkRiddleAnswer() {
+        const answer = input.value.trim().toLowerCase();
+        if (answer === 'flasche') {
+          modal.style.display = 'none';
+          stopGlitter();
+          startBtn.style.display = 'block';
+        } else {
+          alert('Falsch – versuch’s nochmal!');
+          input.value = '';
+          input.focus();
+        }
+      }
     });
-  
 
- // Rätsel Antwort prüfen - Eventlistener
-input.addEventListener('keydown', e => {
-  if (e.key === 'Enter' || e.keyCode === 13) {
-    e.preventDefault();
-    checkRiddleAnswer();
-  }
-});
-
-confirmBtn.addEventListener('click', () => {
-  checkRiddleAnswer();
-});
-
-function checkRiddleAnswer() {
-  const answer = input.value.trim().toLowerCase();
-  if (answer === 'flasche') {
-    modal.style.display = 'none';
-    stopGlitter();
-    document.getElementById('startJumpGameBtn').style.display = 'block';
-  } else {
-    alert('Falsch – versuch’s nochmal!');
-    input.value = '';
-    input.focus();
-  }
-}
-});
 
   // --- Jump & Glide Spiel ---
 
